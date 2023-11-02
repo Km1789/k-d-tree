@@ -31,14 +31,14 @@ bool compareZ(const Point &a, const Point &b)
 
 int plane(vector<Point> p, double d1, double d2, double d3)
 {
-    int res = 0;
+    int res = 1;
     double value = 0.0, delta = 0.0, r = 0.0;
     if (d1 >= d2 && d1 >= d3)
     {
         sort(p.begin(), p.end(), compareX);
         value = d1 / 2;
         delta = fabs(p[0].x - value);
-        for (int i = 1; i < static_cast<int>(p.size()); i++)
+        for (size_t i = 1; i < p.size(); i++)
         {
             r = fabs(p[i].x - value);
             if (r < delta)
@@ -54,7 +54,7 @@ int plane(vector<Point> p, double d1, double d2, double d3)
         sort(p.begin(), p.end(), compareY);
         value = d2 / 2;
         delta = fabs(p[0].y - value);
-        for (int i = 1; i < static_cast<int>(p.size()); i++)
+        for (size_t i = 1; i < p.size(); i++)
         {
             r = fabs(p[i].y - value);
             if (r < delta)
@@ -70,7 +70,7 @@ int plane(vector<Point> p, double d1, double d2, double d3)
         sort(p.begin(), p.end(), compareZ);
         value = d3 / 2;
         delta = fabs(p[0].z - value);
-        for (int i = 1; i < static_cast<int>(p.size()); i++)
+        for (size_t i = 1; i < p.size(); i++)
         {
             r = fabs(p[i].z - value);
             if (r < delta)
@@ -126,7 +126,7 @@ void printTree(shared_ptr<Node> &root)
         cout << "Empty!" << endl;
         return;
     }
-    for (int i = 0; i < static_cast<int>(root->points.size()); i++)
+    for (size_t i = 0; i < root->points.size(); i++)
     {
         cout << "(" << root->points[i].x << ", " << root->points[i].y << ", " << root->points[i].z << ")" << endl;
     }
@@ -152,10 +152,14 @@ void AddElement(shared_ptr<Node> &prev_root, Point el)
 
 bool FindElement(shared_ptr<Node> &root, Point el)
 {
-    vector<Point> points(root->points.begin(), root->points.end());
-    for (int i = 0; i < static_cast<int>(points.size()); i++)
+    if (root == nullptr || root->points.empty())
     {
-        if (points[i] ==  el)
+        return 0;
+    }
+    vector<Point> points(root->points.begin(), root->points.end());
+    for (size_t i = 0; i < points.size(); i++)
+    {
+        if (points[i] == el)
         {
             return 1;
         }
@@ -176,7 +180,7 @@ void PopElement(shared_ptr<Node> &prev_root, Point el)
     }
     else
     {
-        for (int i = 0; i < static_cast<int>(points.size()); i++)
+        for (size_t i = 0; i < points.size(); i++)
         {
             if (points[i] == el)
             {
@@ -197,4 +201,58 @@ void delRepeats(vector<Point> &points)
         end = remove(it + 1, end, *it);
     }
     points.erase(end, points.end());
+}
+
+bool is_equal(vector<Point> &p, vector<Point> &r)
+{
+    if (p.size() != r.size())
+    {
+        return false;
+    }
+    int f = 0;
+    for (size_t i = 0; i < p.size(); i++)
+    {
+        for (size_t j = 0; j < r.size(); j++)
+        {
+            if (p[i] == r[j])
+            {
+                f = 1;
+                break;
+            }
+        }
+        if (f)
+        {
+            if (i != p.size() - 1)
+            {
+                f = 0;
+                continue;
+            }
+            break;
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (f)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+bool findNode(shared_ptr<Node> &root, vector<Point> &p)
+{
+    if (root == nullptr)
+    {
+        return false;
+    }
+    if (is_equal(root->points, p))
+    {
+        return true;
+    }
+    return findNode(root->left, p) || findNode(root->right, p);
 }

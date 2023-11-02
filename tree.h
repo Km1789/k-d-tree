@@ -3,6 +3,7 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <set>
 #include <memory>
 
 using namespace std;
@@ -58,5 +59,9 @@ bool FindElement(shared_ptr<Node> &root, Point el);
 void PopElement(shared_ptr<Node> &prev_root, Point el);
 
 void delRepeats(vector<Point> &points);
+
+bool findNode(shared_ptr<Node> &root, vector<Point> &p);
+
+bool is_equal(vector<Point> &p, vector<Point> &r);
 
 bool test();

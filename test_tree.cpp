@@ -1,6 +1,7 @@
 using namespace std;
 #include <memory>
 #include <iostream>
+#include <set>
 #include "tree.h"
 
 bool test()
